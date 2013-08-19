@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IocOrigins.DataCommands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,11 +35,12 @@ namespace IocOrigins.Dal
         }
 
         public bool ExecuteCommand<TCommand, TParameter>(TParameter param)
-            where TCommand: DataCommandBase<TParameter>, new()
+            where TCommand: IHandleCommand<TParameter>
         {
-            var command  = new TCommand();
-            command.Connection = Connection;
-            command.Data = Data;
+            var tx = new DataTransaction(Data);
+            var command =
+                (TCommand)(
+                    Activator.CreateInstance(typeof(TCommand), tx));
 
             try
             {
@@ -50,11 +52,7 @@ namespace IocOrigins.Dal
                 return false;
             }
 
-            if (command.Transaction == null)
-            {
-                Console.WriteLine("Command executed without transaction.");
-            }
-            else if (!command.Transaction.Committed || command.Transaction.Cancelled)
+            if (!tx.Committed || tx.Cancelled)
             {
                 Console.WriteLine("Command completed without either committing or cancelling transaction.");
             }

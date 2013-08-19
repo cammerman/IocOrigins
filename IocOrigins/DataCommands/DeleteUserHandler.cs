@@ -8,22 +8,29 @@ using System.Threading.Tasks;
 
 namespace IocOrigins.DataCommands
 {
-    public class DeleteUserHandler : DataCommandBase<DeleteUserCommand>
+    public class DeleteUserHandler : IHandleCommand<DeleteUserCommand>
     {
-        public override void DoWork(DeleteUserCommand param)
-        {
-            this.OpenTransaction("Delete user");
+        protected IDataTransaction Transaction { get; private set; }
 
-            var userToDelete = this.Find<User>(user => user.Name.ToUpper() == param.Name).SingleOrDefault();
+        public DeleteUserHandler(IDataTransaction tx)
+        {
+            Transaction = tx;
+        }
+
+        public void DoWork(DeleteUserCommand param)
+        {
+            var userToDelete =
+                Transaction.Find<User>(user => user.Name.ToUpper() == param.Name.ToUpper())
+                    .SingleOrDefault();
 
             if (userToDelete == null)
             {
-                this.Transaction.Cancel();
+                Transaction.Cancel();
                 throw new DataCommandException("User doesn't exist.");
             }
 
             Console.WriteLine("Deleting user {0}", param.Name);
-            this.Delete(userToDelete);
+            Transaction.Delete(userToDelete);
 
             this.Transaction.Commit();
         }
