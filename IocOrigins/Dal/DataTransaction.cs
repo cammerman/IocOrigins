@@ -79,5 +79,15 @@ namespace IocOrigins.Dal
             Cancelled = true;
             Console.WriteLine("Transaction cancelled.");
         }
+
+        public void Dispose()
+        {
+            Console.WriteLine("Transaction disposing.");
+            if (!Committed && !Cancelled)
+            {
+                Cancel();
+            }
+            Console.WriteLine("Transaction disposed.");
+        }
     }
 }

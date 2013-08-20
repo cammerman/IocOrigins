@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IocOrigins.Dal
 {
-    public interface IDataTransaction
+    public interface IDataTransaction : IDisposable
     {
         TEntity Load<TEntity>(int id)
             where TEntity : IEntity;

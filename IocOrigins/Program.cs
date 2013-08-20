@@ -41,6 +41,8 @@ namespace IocOrigins
                 // Get to work.
                 var router = new RouteCommand(container);
                 Execute(options, router);
+
+                container.Dispose();
             }
         }
 
