@@ -8,25 +8,31 @@ using System.Threading.Tasks;
 
 namespace IocOrigins.DataCommands
 {
-    public class PromoteUserHandler : DataCommandBase<PromoteUserCommand>
+    public class PromoteUserHandler : IHandleCommand<PromoteUserCommand>
     {
-        public override void DoWork(PromoteUserCommand param)
-        {
-            this.OpenTransaction("Promote user to admin");
+        protected IDataTransaction Transaction { get; private set; }
 
-            var userToPromote = this.Find<User>(user => user.Name.ToUpper() == param.Name.ToUpper())
-                .SingleOrDefault();
+        public PromoteUserHandler(IDataTransaction tx)
+        {
+            Transaction = tx;
+        }
+
+        public void DoWork(PromoteUserCommand param)
+        {
+            var userToPromote =
+                Transaction.Find<User>(user => user.Name.ToUpper() == param.Name.ToUpper())
+                    .SingleOrDefault();
 
             if (userToPromote == null)
             {
-                this.Transaction.Cancel();
+                Transaction.Cancel();
                 throw new DataCommandException("User doesn't exist.");
             }
 
             Console.WriteLine("Promoting user {0} to admin.", param.Name);
             userToPromote.IsAdmin = true;
 
-            this.Transaction.Commit();
+            Transaction.Commit();
         }
     }
 }
