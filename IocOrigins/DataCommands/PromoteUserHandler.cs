@@ -20,7 +20,7 @@ namespace IocOrigins.DataCommands
         public void DoWork(PromoteUserCommand param)
         {
             var userToPromote =
-                Transaction.Find<User>(user => user.Name.ToUpper() == param.Name)
+                Transaction.Find<User>(user => user.Name.ToUpper() == param.Name.ToUpper())
                     .SingleOrDefault();
 
             if (userToPromote == null)
