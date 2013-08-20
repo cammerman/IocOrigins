@@ -51,13 +51,16 @@
     <Compile Include="CommandInfra\IHandleCommand.cs" />
     <Compile Include="CommandInfra\IRouteCommand.cs" />
     <Compile Include="CommandInfra\RouteCommand.cs" />
+    <Compile Include="Dal\DataManager.cs" />
     <Compile Include="Dal\DataTransaction.cs" />
     <Compile Include="Dal\DataCommandException.cs" />
-    <Compile Include="Dal\DataManager.cs" />
     <Compile Include="Dal\DBConnection.cs" />
+    <Compile Include="Dal\IConnection.cs" />
+    <Compile Include="Dal\IDataStore.cs" />
     <Compile Include="Dal\IDataTransaction.cs" />
     <Compile Include="Dal\IEntity.cs" />
     <Compile Include="CliOptions.cs" />
+    <Compile Include="Dal\InMemoryDataStore.cs" />
     <Compile Include="DataCommands\PromoteUserCommand.cs" />
     <Compile Include="DataCommands\DeleteUserCommand.cs" />
     <Compile Include="DataCommands\CreateUserCommand.cs" />

@@ -9,17 +9,19 @@ namespace IocOrigins.Dal
 {
     public class DataManager
     {
-        protected string ConnectionString { get; private set; }
+        public string ConnectionString { get; set; }
 
-        private DbConnection _connection;
+        protected Func<string, IConnection> CreateConnection { get; private set; }
 
-        protected DbConnection Connection
+        private IConnection _connection;
+
+        protected IConnection Connection
         {
             get
             {
                 if (_connection == null)
                 {
-                    _connection = new DbConnection(ConnectionString, Data);
+                    _connection = CreateConnection(ConnectionString);
                 }
 
                 return _connection;
@@ -28,10 +30,9 @@ namespace IocOrigins.Dal
 
         public List<object> Data { get; private set; }
 
-        public DataManager(string connectionString, IEnumerable<object> data)
+        public DataManager(Func<string, IConnection> createConnection)
         {
-            ConnectionString = connectionString;
-            Data = data.ToList();
+            CreateConnection = createConnection;
         }
 
         public IDataTransaction BeginTransaction()

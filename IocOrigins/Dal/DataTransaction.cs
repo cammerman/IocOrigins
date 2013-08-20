@@ -8,14 +8,14 @@ namespace IocOrigins.Dal
 {
     public class DataTransaction : IDataTransaction
     {
-        protected virtual DbConnection Connection { get; private set; }
+        protected virtual IConnection Connection { get; private set; }
 
-        public DataTransaction(DbConnection conn)
+        public DataTransaction(IConnection conn)
         {
             Connection = conn;
         }
 
-        public List<object> Data
+        public IList<object> Data
         {
             get { return Connection.Data; }
         }

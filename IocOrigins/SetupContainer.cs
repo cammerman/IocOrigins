@@ -12,26 +12,40 @@ namespace IocOrigins
 {
     public static class SetupContainer
     {
-        public static IContainer Build(DataManager singleManager)
+        private static Func<string, IConnection> CreateConnectionFactoryMethod(IComponentContext context)
+        {
+            var data = context.Resolve<IDataStore>();
+
+            return (string connStr) =>
+                new DbConnection(connStr, data);
+        }
+
+        public static IContainer Build(IDataStore dataStore)
         {
             var builder = new ContainerBuilder();
 
             builder
                 .RegisterAssemblyTypes(
                     Assembly.GetExecutingAssembly())
-                .Where(type =>
-                    type.IsClosedTypeOf(
-                        typeof(IHandleCommand<>)))
                 .AsImplementedInterfaces()
                 .InstancePerDependency();
-            
-            builder
-                .RegisterInstance(singleManager)
+
+            builder.RegisterInstance(dataStore)
+                .As<IDataStore>()
+                .SingleInstance();
+
+            builder.RegisterType<DataManager>()
                 .AsSelf()
                 .SingleInstance();
 
+            builder.Register(CreateConnectionFactoryMethod)
+                .AsSelf()
+                .SingleInstance();
+                
             builder
-                .Register(context => context.Resolve<DataManager>().BeginTransaction())
+                .Register(context =>
+                    context.Resolve<DataManager>()
+                        .BeginTransaction())
                 .As<IDataTransaction>()
                 .InstancePerDependency();
 

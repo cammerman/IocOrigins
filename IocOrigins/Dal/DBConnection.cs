@@ -6,17 +6,22 @@ using System.Threading.Tasks;
 
 namespace IocOrigins.Dal
 {
-    public class DbConnection
+    public class DbConnection : IConnection
     {
         public string ConnectionString { get; private set; }
 
-        public List<object> Data { get; private set; }
+        protected virtual IDataStore DataStore { get; private set; }
 
-        public DbConnection(string connectionString, List<object> data)
+        public IList<object> Data
+        {
+            get { return DataStore.Data; }
+        }
+
+        public DbConnection(string connectionString, IDataStore data)
         {
             Console.WriteLine("Opened connection to {0}", connectionString);
             ConnectionString = connectionString;
-            Data = data;
+            DataStore = data;
         }
     }
 }
