@@ -14,7 +14,8 @@ namespace IocOrigins.DataCommands
         {
             this.OpenTransaction("Delete user");
 
-            var userToDelete = this.Find<User>(user => user.Name.ToUpper() == param.Name).SingleOrDefault();
+            var userToDelete = this.Find<User>(user => user.Name.ToUpper() == param.Name.ToUpper())
+                .SingleOrDefault();
 
             if (userToDelete == null)
             {

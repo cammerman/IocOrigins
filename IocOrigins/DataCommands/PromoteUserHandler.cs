@@ -14,7 +14,8 @@ namespace IocOrigins.DataCommands
         {
             this.OpenTransaction("Promote user to admin");
 
-            var userToPromote = this.Find<User>(user => user.Name.ToUpper() == param.Name).SingleOrDefault();
+            var userToPromote = this.Find<User>(user => user.Name.ToUpper() == param.Name.ToUpper())
+                .SingleOrDefault();
 
             if (userToPromote == null)
             {
