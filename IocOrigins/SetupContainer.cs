@@ -26,6 +26,10 @@ namespace IocOrigins
                 .As<IDataStore>()
                 .SingleInstance();
 
+            builder.RegisterType<DataTransaction>()
+                .As<IDataTransaction>()
+                .InstancePerLifetimeScope();
+
             return builder.Build();
         }
     }

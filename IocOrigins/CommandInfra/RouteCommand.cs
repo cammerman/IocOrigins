@@ -21,9 +21,13 @@ namespace IocOrigins.CommandInfra
         public void Route<TCommand>(TCommand command)
             where TCommand : ICommand
         {
-            var handler = Container.Resolve<IHandleCommand<TCommand>>();
+            var childScope = Container.BeginLifetimeScope();
+
+            var handler = childScope.Resolve<IHandleCommand<TCommand>>();
 
             handler.Handle(command);
+
+            childScope.Dispose();
         }
     }
 }
