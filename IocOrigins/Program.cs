@@ -34,35 +34,24 @@ namespace IocOrigins
                         .ToList();
 
                 var manager = new DataManager(_connectionString, data);
-                var succeeded = false;
 
-                // consume Options instance properties
+                var tx = manager.BeginTransaction();
+
                 if (options.UserToCreate != null)
                 {
-                    succeeded = manager.ExecuteCommand<CreateUserHandler, CreateUserCommand>(new CreateUserCommand {
-                        Name = options.UserToCreate
-                    });
+                    new CreateUser(tx).DoWork(options.UserToCreate);
 
-                    if (succeeded && options.Admin) {
-                        succeeded = manager.ExecuteCommand<PromoteUserHandler, PromoteUserCommand>(new PromoteUserCommand {
-                            Name = options.UserToPromote
-                        });
+                    if (options.Admin) {
+                        new PromoteUser(tx).DoWork(options.UserToCreate);
                     }
+                }
+                else if (options.UserToPromote != null)
+                {
+                    new PromoteUser(tx).DoWork(options.UserToPromote);
                 }
                 else if (options.UserToDelete != null)
                 {
-                    succeeded = manager.ExecuteCommand<DeleteUserHandler, DeleteUserCommand>(new DeleteUserCommand {
-                        Name = options.UserToDelete
-                    });
-                }
-
-                if (succeeded)
-                {
-                    Console.WriteLine("Command succeded.");
-                }
-                else
-                {
-                    Console.WriteLine("Command failed.");
+                    new DeleteUser(tx).DoWork(options.UserToDelete);
                 }
             }
         }

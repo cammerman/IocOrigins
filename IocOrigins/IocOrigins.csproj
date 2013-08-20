@@ -51,13 +51,9 @@
     <Compile Include="Dal\IDataTransaction.cs" />
     <Compile Include="Dal\IEntity.cs" />
     <Compile Include="CliOptions.cs" />
-    <Compile Include="DataCommands\CreateUserCommand.cs" />
-    <Compile Include="DataCommands\CreateUserHandler.cs" />
-    <Compile Include="DataCommands\DeleteUserCommand.cs" />
-    <Compile Include="DataCommands\DeleteUserHandler.cs" />
-    <Compile Include="DataCommands\IHandleCommand.cs" />
-    <Compile Include="DataCommands\PromoteUserCommand.cs" />
-    <Compile Include="DataCommands\PromoteUserHandler.cs" />
+    <Compile Include="DataCommands\CreateUser.cs" />
+    <Compile Include="DataCommands\DeleteUser.cs" />
+    <Compile Include="DataCommands\PromoteUser.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

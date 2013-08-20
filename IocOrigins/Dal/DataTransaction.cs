@@ -8,12 +8,17 @@ namespace IocOrigins.Dal
 {
     public class DataTransaction : IDataTransaction
     {
-        public DataTransaction(IEnumerable<object> data)
+        protected virtual DbConnection Connection { get; private set; }
+
+        public DataTransaction(DbConnection conn)
         {
-            Data = data.ToList();
+            Connection = conn;
         }
 
-        public List<object> Data { get; private set; }
+        public List<object> Data
+        {
+            get { return Connection.Data; }
+        }
         
         public virtual TEntity Load<TEntity>(int id)
             where TEntity : IEntity
@@ -35,7 +40,7 @@ namespace IocOrigins.Dal
         public virtual TEntity[] Find<TEntity>(Func<TEntity, bool> filter)
             where TEntity : IEntity
         {
-            Console.WriteLine("Loaded entities with filter {0}", filter.ToString());
+            Console.WriteLine("Loaded entities with filter.");
             
             return
                 Data

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IocOrigins
+namespace IocOrigins.Dal
 {
     public class DataCommandException : Exception
     {

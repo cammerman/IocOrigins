@@ -19,7 +19,7 @@ namespace IocOrigins.Dal
             {
                 if (_connection == null)
                 {
-                    _connection = new DbConnection(ConnectionString);
+                    _connection = new DbConnection(ConnectionString, Data);
                 }
 
                 return _connection;
@@ -34,30 +34,9 @@ namespace IocOrigins.Dal
             Data = data.ToList();
         }
 
-        public bool ExecuteCommand<TCommand, TParameter>(TParameter param)
-            where TCommand: IHandleCommand<TParameter>
+        public IDataTransaction BeginTransaction()
         {
-            var tx = new DataTransaction(Data);
-            var command =
-                (TCommand)(
-                    Activator.CreateInstance(typeof(TCommand), tx));
-
-            try
-            {
-                command.DoWork(param);
-            }
-            catch (DataCommandException ex)
-            {
-                Console.WriteLine("Exception occurred during command. Message: {0}", ex.Message);
-                return false;
-            }
-
-            if (!tx.Committed || tx.Cancelled)
-            {
-                Console.WriteLine("Command completed without either committing or cancelling transaction.");
-            }
-
-            return true;
+            return new DataTransaction(Connection);
         }
     }
 }

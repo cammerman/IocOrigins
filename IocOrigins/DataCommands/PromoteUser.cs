@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace IocOrigins.DataCommands
 {
-    public class PromoteUserHandler : IHandleCommand<PromoteUserCommand>
+    public class PromoteUser
     {
         protected IDataTransaction Transaction { get; private set; }
 
-        public PromoteUserHandler(IDataTransaction tx)
+        public PromoteUser(IDataTransaction tx)
         {
             Transaction = tx;
         }
 
-        public void DoWork(PromoteUserCommand param)
+        public void DoWork(string username)
         {
             var userToPromote =
-                Transaction.Find<User>(user => user.Name.ToUpper() == param.Name.ToUpper())
+                Transaction.Find<User>(user => user.Name.ToUpper() == username.ToUpper())
                     .SingleOrDefault();
 
             if (userToPromote == null)
@@ -29,7 +29,7 @@ namespace IocOrigins.DataCommands
                 throw new DataCommandException("User doesn't exist.");
             }
 
-            Console.WriteLine("Promoting user {0} to admin.", param.Name);
+            Console.WriteLine("Promoting user {0} to admin.", username);
             userToPromote.IsAdmin = true;
 
             Transaction.Commit();

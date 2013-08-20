@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace IocOrigins.DataCommands
 {
-    public class DeleteUserHandler : IHandleCommand<DeleteUserCommand>
+    public class DeleteUser
     {
         protected IDataTransaction Transaction { get; private set; }
 
-        public DeleteUserHandler(IDataTransaction tx)
+        public DeleteUser(IDataTransaction tx)
         {
             Transaction = tx;
         }
 
-        public void DoWork(DeleteUserCommand param)
+        public void DoWork(string username)
         {
             var userToDelete =
-                Transaction.Find<User>(user => user.Name.ToUpper() == param.Name.ToUpper())
+                Transaction.Find<User>(user => user.Name.ToUpper() == username.ToUpper())
                     .SingleOrDefault();
 
             if (userToDelete == null)
@@ -29,7 +29,7 @@ namespace IocOrigins.DataCommands
                 throw new DataCommandException("User doesn't exist.");
             }
 
-            Console.WriteLine("Deleting user {0}", param.Name);
+            Console.WriteLine("Deleting user {0}", username);
             Transaction.Delete(userToDelete);
 
             this.Transaction.Commit();

@@ -8,29 +8,29 @@ using System.Threading.Tasks;
 
 namespace IocOrigins.DataCommands
 {
-    public class CreateUserHandler : IHandleCommand<CreateUserCommand>
+    public class CreateUser
     {
         protected IDataTransaction Transaction { get; private set; }
 
-        public CreateUserHandler(IDataTransaction tx)
+        public CreateUser(IDataTransaction tx)
         {
             Transaction = tx;
         }
 
-        public void DoWork(CreateUserCommand param)
+        public void DoWork(string username)
         {
-            if (param.Name.IndexOfAny(",./;'[]\\-=!@#$%^&*()_+{}|:\"<>?".ToArray()) >= 0)
+            if (username.IndexOfAny(",./;'[]\\-=!@#$%^&*()_+{}|:\"<>?".ToArray()) >= 0)
             {
                 Transaction.Cancel();
                 throw new DataCommandException("User name contains an invalid character.");
             }
 
-            Console.WriteLine("Creating user {0}", param.Name);
+            Console.WriteLine("Creating user {0}", username);
 
             var newId = new Random().Next(1, Int32.MaxValue);
             Transaction.Save(
                 new User(newId) {
-                    Name = param.Name
+                    Name = username
                 }
             );
 
