@@ -1,4 +1,5 @@
-﻿using IocOrigins.Dal;
+﻿using Autofac;
+using IocOrigins.Dal;
 using IocOrigins.DataCommands;
 using System;
 using System.Collections.Generic;
@@ -8,45 +9,19 @@ using System.Threading.Tasks;
 
 namespace IocOrigins.CommandInfra
 {
-    public class RouteCommand
+    public class RouteCommand : IRouteCommand
     {
-        private Dictionary<Type, Func<object>> _handlerFactoryMethodsByCommandType;
+        protected IContainer Container { get; private set; }
 
-        protected virtual DataManager DataMgr { get; private set; }
-
-        public RouteCommand(DataManager dataMgr)
+        public RouteCommand(IContainer container)
         {
-            DataMgr = dataMgr;
-
-            _handlerFactoryMethodsByCommandType = 
-                new Dictionary<Type,Func<object>> {
-                    { typeof(CreateUserCommand), () => CreateUserHandler() },
-                    { typeof(PromoteUserCommand), () => PromoteUserHandler() },
-                    { typeof(DeleteUserCommand), () => DeleteUserHandler() },
-                };
-        }
-
-        protected CreateUserHandler CreateUserHandler()
-        {
-            return new CreateUserHandler(DataMgr.BeginTransaction());
-        }
-
-        protected PromoteUserHandler PromoteUserHandler()
-        {
-            return new PromoteUserHandler(DataMgr.BeginTransaction());
-        }
-        
-        protected DeleteUserHandler DeleteUserHandler()
-        {
-            return new DeleteUserHandler(DataMgr.BeginTransaction());
+            Container = container;
         }
 
         public void Route<TCommand>(TCommand command)
             where TCommand : ICommand
         {
-            var create = _handlerFactoryMethodsByCommandType[typeof(TCommand)];
-
-            var handler = create() as IHandleCommand<TCommand>;
+            var handler = Container.Resolve<IHandleCommand<TCommand>>();
 
             handler.Handle(command);
         }

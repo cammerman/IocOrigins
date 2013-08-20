@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Autofac;
 
 namespace IocOrigins
 {
@@ -36,32 +37,39 @@ namespace IocOrigins
 
                 var manager = new DataManager(_connectionString, data);
 
-                var router = new RouteCommand(manager);
+                var container = SetupContainer.Build(manager);
 
-                if (options.UserToCreate != null)
-                {
-                    router.Route(
-                        new CreateUserCommand {
-                            Username = options.UserToCreate });
+                var router = new RouteCommand(container);
 
-                    if (options.Admin) {
-                        router.Route(
-                            new PromoteUserCommand {
-                                Username = options.UserToCreate });
-                    }
-                }
-                else if (options.UserToPromote != null)
-                {
+                Execute(options, router);
+            }
+        }
+
+        static void Execute(CliOptions options, IRouteCommand router)
+        {
+            if (options.UserToCreate != null)
+            {
+                router.Route(
+                    new CreateUserCommand {
+                        Username = options.UserToCreate });
+
+                if (options.Admin) {
                     router.Route(
                         new PromoteUserCommand {
-                            Username = options.UserToPromote });
+                            Username = options.UserToCreate });
                 }
-                else if (options.UserToDelete != null)
-                {
-                    router.Route(
-                        new DeleteUserCommand {
-                            Username = options.UserToDelete });
-                }
+            }
+            else if (options.UserToPromote != null)
+            {
+                router.Route(
+                    new PromoteUserCommand {
+                        Username = options.UserToPromote });
+            }
+            else if (options.UserToDelete != null)
+            {
+                router.Route(
+                    new DeleteUserCommand {
+                        Username = options.UserToDelete });
             }
         }
     }

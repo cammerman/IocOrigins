@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.1.1\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="CommandLine">
       <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
     </Reference>
@@ -46,6 +49,7 @@
   <ItemGroup>
     <Compile Include="CommandInfra\ICommand.cs" />
     <Compile Include="CommandInfra\IHandleCommand.cs" />
+    <Compile Include="CommandInfra\IRouteCommand.cs" />
     <Compile Include="CommandInfra\RouteCommand.cs" />
     <Compile Include="Dal\DataTransaction.cs" />
     <Compile Include="Dal\DataCommandException.cs" />
@@ -63,6 +67,7 @@
     <Compile Include="Domain\User.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SetupContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
