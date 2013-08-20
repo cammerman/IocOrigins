@@ -17,10 +17,10 @@ namespace IocOrigins.Dal
             get { return DataStore.Data; }
         }
 
-        public DbConnection(string connectionString, IDataStore data)
+        public DbConnection(IConnectionString connectionString, IDataStore data)
         {
             Console.WriteLine("Opened connection to {0}", connectionString);
-            ConnectionString = connectionString;
+            ConnectionString = connectionString.Value;
             DataStore = data;
         }
     }

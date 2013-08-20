@@ -38,10 +38,6 @@ namespace IocOrigins
                 var container = SetupContainer.Build(
                     new InMemoryDataStore(data));
 
-                // One-time setup.
-                var manager = container.Resolve<DataManager>();
-                manager.ConnectionString = _connectionString;
-
                 // Get to work.
                 var router = new RouteCommand(container);
                 Execute(options, router);

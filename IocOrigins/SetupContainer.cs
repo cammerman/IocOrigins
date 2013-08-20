@@ -26,17 +26,6 @@ namespace IocOrigins
                 .As<IDataStore>()
                 .SingleInstance();
 
-            builder.RegisterType<DataManager>()
-                .AsSelf()
-                .SingleInstance();
-                
-            builder
-                .Register(context =>
-                    context.Resolve<DataManager>()
-                        .BeginTransaction())
-                .As<IDataTransaction>()
-                .InstancePerDependency();
-
             return builder.Build();
         }
     }

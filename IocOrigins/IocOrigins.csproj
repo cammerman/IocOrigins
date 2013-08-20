@@ -39,6 +39,7 @@
       <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -51,11 +52,12 @@
     <Compile Include="CommandInfra\IHandleCommand.cs" />
     <Compile Include="CommandInfra\IRouteCommand.cs" />
     <Compile Include="CommandInfra\RouteCommand.cs" />
-    <Compile Include="Dal\DataManager.cs" />
+    <Compile Include="ConnectionString.cs" />
     <Compile Include="Dal\DataTransaction.cs" />
     <Compile Include="Dal\DataCommandException.cs" />
     <Compile Include="Dal\DBConnection.cs" />
     <Compile Include="Dal\IConnection.cs" />
+    <Compile Include="Dal\IConnectionString.cs" />
     <Compile Include="Dal\IDataStore.cs" />
     <Compile Include="Dal\IDataTransaction.cs" />
     <Compile Include="Dal\IEntity.cs" />
