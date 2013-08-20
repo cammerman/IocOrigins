@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IocOrigins.Dal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace IocOrigins.DataCommands.Services
 {
     public interface ICreateUserService
     {
-        void Create(string username);
+        void Create(IDataTransaction tx, string username);
     }
 }
