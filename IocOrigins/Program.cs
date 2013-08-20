@@ -46,25 +46,30 @@ namespace IocOrigins
 
         static void Execute(CliOptions options, IRouteCommand router)
         {
-            if (options.UserToCreate != null)
+            if (options.UserToCreate != null && !options.Admin)
             {
                 router.Route(
                     new CreateUserCommand {
                         Username = options.UserToCreate });
+            }
 
+            if (options.UserToCreate != null && options.Admin)
+            {
                 if (options.Admin) {
                     router.Route(
-                        new PromoteUserCommand {
+                        new CreateAdminUserCommand {
                             Username = options.UserToCreate });
                 }
             }
-            else if (options.UserToPromote != null)
+            
+            if (options.UserToPromote != null)
             {
                 router.Route(
                     new PromoteUserCommand {
                         Username = options.UserToPromote });
             }
-            else if (options.UserToDelete != null)
+            
+            if (options.UserToDelete != null)
             {
                 router.Route(
                     new DeleteUserCommand {

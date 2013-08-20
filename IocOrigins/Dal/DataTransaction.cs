@@ -13,6 +13,7 @@ namespace IocOrigins.Dal
         public DataTransaction(IConnection conn)
         {
             Connection = conn;
+            Console.WriteLine("Transaction opened.");
         }
 
         public IList<object> Data
@@ -23,7 +24,7 @@ namespace IocOrigins.Dal
         public virtual TEntity Load<TEntity>(int id)
             where TEntity : IEntity
         {
-            Console.WriteLine("Opened entity with id {0}", id);
+            Console.WriteLine("Loaded entity with id {0}", id);
             return
                 Data
                     .OfType<TEntity>()
