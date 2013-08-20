@@ -30,8 +30,8 @@ namespace IocOrigins.DataCommands
         {
             try
             {
-                Create.Create(Transaction, command.Username);
-                Promote.Promote(Transaction, command.Username);
+                Create.Create(command.Username);
+                Promote.Promote(command.Username);
             }
             catch (Exception ex)
             {

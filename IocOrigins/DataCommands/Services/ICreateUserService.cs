@@ -9,6 +9,6 @@ namespace IocOrigins.DataCommands.Services
 {
     public interface ICreateUserService
     {
-        void Create(IDataTransaction tx, string username);
+        void Create(string username);
     }
 }

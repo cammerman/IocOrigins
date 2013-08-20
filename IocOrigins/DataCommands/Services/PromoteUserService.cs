@@ -10,14 +10,17 @@ namespace IocOrigins.DataCommands.Services
 {
     public class PromoteUserService : IPromoteUserService
     {
-        public PromoteUserService()
+        protected virtual IDataTransaction Transaction { get; private set; }
+
+        public PromoteUserService(IDataTransaction tx)
         {
+            Transaction = tx;
         }
 
-        public void Promote(IDataTransaction tx, string username)
+        public void Promote(string username)
         {
             var userToPromote =
-                tx.Find<User>(user => user.Name.ToUpper() == username.ToUpper())
+                Transaction.Find<User>(user => user.Name.ToUpper() == username.ToUpper())
                     .SingleOrDefault();
 
             if (userToPromote == null)

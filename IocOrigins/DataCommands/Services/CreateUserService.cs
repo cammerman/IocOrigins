@@ -10,11 +10,14 @@ namespace IocOrigins.DataCommands.Services
 {
     public class CreateUserService : ICreateUserService
     {
-        public CreateUserService()
+        protected virtual IDataTransaction Transaction { get; private set; }
+
+        public CreateUserService(IDataTransaction tx)
         {
+            Transaction = tx;
         }
 
-        public void Create(IDataTransaction tx, string username)
+        public void Create(string username)
         {
             if (username.IndexOfAny(",./;'[]\\-=!@#$%^&*()_+{}|:\"<>?".ToArray()) >= 0)
             {
@@ -24,7 +27,7 @@ namespace IocOrigins.DataCommands.Services
             Console.WriteLine("Creating user {0}", username);
 
             var newId = new Random().Next(1, Int32.MaxValue);
-            tx.Save(
+            Transaction.Save(
                 new User(newId) {
                     Name = username
                 }

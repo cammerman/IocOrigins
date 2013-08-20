@@ -9,6 +9,6 @@ namespace IocOrigins.DataCommands.Services
 {
     public interface IPromoteUserService
     {
-        void Promote(IDataTransaction tx, string username);
+        void Promote(string username);
     }
 }
