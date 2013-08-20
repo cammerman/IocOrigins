@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Autofac.Features.OwnedInstances;
 using IocOrigins.Dal;
 using IocOrigins.DataCommands;
 using System;
@@ -21,13 +22,11 @@ namespace IocOrigins.CommandInfra
         public void Route<TCommand>(TCommand command)
             where TCommand : ICommand
         {
-            var childScope = Container.BeginLifetimeScope();
+            var ownedHandler = Container.Resolve<Owned<IHandleCommand<TCommand>>>();
 
-            var handler = childScope.Resolve<IHandleCommand<TCommand>>();
+            ownedHandler.Value.Handle(command);
 
-            handler.Handle(command);
-
-            childScope.Dispose();
+            ownedHandler.Dispose();
         }
     }
 }
