@@ -1,4 +1,5 @@
-﻿using IocOrigins.Dal;
+﻿using IocOrigins.CommandInfra;
+using IocOrigins.Dal;
 using IocOrigins.Domain;
 using System;
 using System.Collections.Generic;
@@ -8,19 +9,19 @@ using System.Threading.Tasks;
 
 namespace IocOrigins.DataCommands
 {
-    public class DeleteUser
+    public class DeleteUserHandler : IHandleCommand<DeleteUserCommand>
     {
         protected IDataTransaction Transaction { get; private set; }
 
-        public DeleteUser(IDataTransaction tx)
+        public DeleteUserHandler(IDataTransaction tx)
         {
             Transaction = tx;
         }
 
-        public void DoWork(string username)
+        public void Handle(DeleteUserCommand command)
         {
             var userToDelete =
-                Transaction.Find<User>(user => user.Name.ToUpper() == username.ToUpper())
+                Transaction.Find<User>(user => user.Name.ToUpper() == command.Username.ToUpper())
                     .SingleOrDefault();
 
             if (userToDelete == null)
@@ -29,7 +30,7 @@ namespace IocOrigins.DataCommands
                 throw new DataCommandException("User doesn't exist.");
             }
 
-            Console.WriteLine("Deleting user {0}", username);
+            Console.WriteLine("Deleting user {0}", command.Username);
             Transaction.Delete(userToDelete);
 
             this.Transaction.Commit();

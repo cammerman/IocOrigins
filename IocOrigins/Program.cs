@@ -1,4 +1,5 @@
-﻿using IocOrigins.Dal;
+﻿using IocOrigins.CommandInfra;
+using IocOrigins.Dal;
 using IocOrigins.DataCommands;
 using IocOrigins.Domain;
 using System;
@@ -35,23 +36,31 @@ namespace IocOrigins
 
                 var manager = new DataManager(_connectionString, data);
 
-                var tx = manager.BeginTransaction();
+                var router = new RouteCommand(manager);
 
                 if (options.UserToCreate != null)
                 {
-                    new CreateUser(tx).DoWork(options.UserToCreate);
+                    router.Route(
+                        new CreateUserCommand {
+                            Username = options.UserToCreate });
 
                     if (options.Admin) {
-                        new PromoteUser(tx).DoWork(options.UserToCreate);
+                        router.Route(
+                            new PromoteUserCommand {
+                                Username = options.UserToCreate });
                     }
                 }
                 else if (options.UserToPromote != null)
                 {
-                    new PromoteUser(tx).DoWork(options.UserToPromote);
+                    router.Route(
+                        new PromoteUserCommand {
+                            Username = options.UserToPromote });
                 }
                 else if (options.UserToDelete != null)
                 {
-                    new DeleteUser(tx).DoWork(options.UserToDelete);
+                    router.Route(
+                        new DeleteUserCommand {
+                            Username = options.UserToDelete });
                 }
             }
         }
